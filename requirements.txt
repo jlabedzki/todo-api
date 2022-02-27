@@ -23,6 +23,7 @@ psycopg==3.0.9
 psycopg2-binary==2.9.3
 pycodestyle==2.8.0
 pycparser==2.21
+python-decouple==3.6
 six==1.16.0
 SQLAlchemy==1.4.31
 toml==0.10.2

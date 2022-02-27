@@ -1,15 +1,20 @@
-from flask import Flask, request, Response, jsonify
-from flask_migrate import Migrate
+import os
+from flask import Flask, Response, jsonify, request
 from flask_bcrypt import Bcrypt
-from flask_login import LoginManager, login_user, current_user, logout_user
+from flask_login import LoginManager, current_user, login_user, logout_user
+from flask_migrate import Migrate
+from decouple import config
+
 from db.models import *
 
 app = Flask(__name__)
+# Add secret key
+app.config.update(SECRET_KEY=os.urandom(24))
 bcrypt = Bcrypt(app)
 
 
 # Configure database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://johnny:johnny@localhost:5432/todo-api'
+app.config['SQLALCHEMY_DATABASE_URI'] = config('DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -36,7 +41,8 @@ def register():
         return Response(status=409)
     else:
         # hash password before storing in db
-        hashed_password = bcrypt.generate_password_hash(password)
+        hashed_password = bcrypt.generate_password_hash(
+            password).decode('utf-8')
         user = User(username=username, password=hashed_password)
         db.session.add(user)
         db.session.commit()
@@ -54,7 +60,7 @@ def login():
         # Compare the password input to the hashed password in the db
         if bcrypt.check_password_hash(user.password, password):
             login_user(user)
-            return jsonify({'user_id': user.id}), Response(status=200)
+            return jsonify({'user_id': user.id})
         else:
             return Response(status=401)
     else:
@@ -68,5 +74,7 @@ def logout():
     return Response(status=200)
 
 
+# @app.route('/todos/:user', methods=['GET', 'POST'])
+# @app.route('/todos/:user/:todo', methods=['POST'])
 if __name__ == "__main__":
     app.run(debug=True)
