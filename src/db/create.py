@@ -1,5 +1,5 @@
 from flask import Flask
-from db.models import *
+from models import *
 from decouple import config
 
 app = Flask(__name__)
