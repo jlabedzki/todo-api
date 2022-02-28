@@ -9,7 +9,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
-statuses = ['active', 'cancelled', 'complete']
+statuses = ['active', 'complete']
 
 
 def main():
