@@ -22,9 +22,9 @@ def register():
         return Response(status=409)
     else:
         # hash password before storing in db
-        hashed_password = bcrypt.generate_password_hash(
-            password).decode('utf-8')
-        user = User(username=username, password=hashed_password)
+        # hashed_password = bcrypt.generate_password_hash(
+        #     password).decode('utf-8')
+        user = User(username=username, password=password)
         db.session.add(user)
         db.session.commit()
         return Response(status=201)
