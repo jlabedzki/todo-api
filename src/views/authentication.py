@@ -32,6 +32,7 @@ def register():
 
 @authentication.route('/login', methods=['POST'])
 def login():
+    request.get_json(force=True)
     username = request.json['username']
     password = request.json['password']
 
