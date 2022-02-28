@@ -17,7 +17,8 @@ def main():
     for status in statuses:
         new_status = Status(status=status)
         db.session.add(new_status)
-        db.session.commit()
+
+    db.session.commit()
 
 
 if __name__ == "__main__":

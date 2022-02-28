@@ -10,20 +10,18 @@ ma = Marshmallow(app)
 
 class TodoSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'user_id', 'title', 'created_at', 'status_id')
+        fields = ('id', 'user_id', 'title', 'date', 'status_id')
 
 
 todo_schema = TodoSchema()
 todos_schema = TodoSchema(many=True)
 
 
-@todos.route('/todos/<user_id>', methods=['GET', 'POST'])
+@todos.route('/todos/<int:user_id>', methods=['GET', 'POST'])
 def todos_for_user(user_id):
-    # request.get_json(force=True)
-
     if request.method == 'GET':
         todos = Todo.query.filter_by(user_id=user_id)
-        return todos_schema.jsonify(todos)
+        return todos_schema.jsonify(todos), 200
 
     if request.method == 'POST':
         request.get_json(force=True)
@@ -31,25 +29,31 @@ def todos_for_user(user_id):
         todo = Todo(
             user_id=user_id,
             title=request.json['title'],
-            created_at=request.json['date']
+            date=request.json['date']
         )
 
         db.session.add(todo)
         db.session.commit()
-        return todo_schema.jsonify(todo)
+        return todo_schema.jsonify(todo), 201
 
 
-@todos.route('/todo/<todo_id>', methods=['PUT', 'DELETE'])
+@todos.route('/todo/<int:todo_id>', methods=['PUT', 'DELETE'])
 def update_todo(todo_id):
-    if request.method == 'POST':
-        return
+    if request.method == 'PUT':
+        request.get_json(force=True)
+
+        todo = Todo.query.filter_by(id=todo_id).scalar()
+        todo.title = request.json['title']
+        todo.date = request.json['date']
+        todo.status_id = request.json['status']
+
+        db.session.commit()
+
+        return todo_schema.jsonify(todo), 200
 
     if request.method == 'DELETE':
         todo = Todo.query.filter_by(id=todo_id).scalar()
 
-        if todo:
-            db.session.delete(todo)
-            db.session.commit()
-            return Response(status=200)
-
-        return Response(status=404)
+        db.session.delete(todo)
+        db.session.commit()
+        return Response(status=200)
