@@ -11,6 +11,7 @@ authentication = Blueprint('authentication', __name__)
 
 @authentication.route('/register', methods=['POST'])
 def register():
+    request.get_json(force=True)
     username = request.json['username']
     password = request.json['password']
 

@@ -4,7 +4,8 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from decouple import config
 from db.models import *
-from views import authentication, todos
+from views.authentication import authentication
+from views.todos import todos
 
 app = Flask(__name__)
 # Add secret key
