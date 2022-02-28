@@ -9,15 +9,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
-statuses = ['active', 'complete']
-
 
 def main():
     db.create_all()
-    for status in statuses:
-        new_status = Status(status=status)
-        db.session.add(new_status)
-
     db.session.commit()
 
 

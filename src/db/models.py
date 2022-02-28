@@ -13,21 +13,13 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(), nullable=False)
 
 
-class Status(db.Model):
-    """ Status model """
-
-    id = db.Column(db.Integer, primary_key=True)
-    status = db.Column(db.String(25), unique=True, nullable=False)
-
-
 class Todo(db.Model):
     """ Todo model """
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(
         'users.id', ondelete='CASCADE'))
-    status_id = db.Column(db.Integer, db.ForeignKey(
-        'status.id'), default=1)
     title = db.Column(db.String(255), nullable=False)
     date = db.Column(db.Date(), nullable=False)
     priority = db.Column(db.Integer, default=1, nullable=False)
+    completed = db.Column(db.Boolean, default=False, nullable=False)

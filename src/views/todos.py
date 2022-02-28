@@ -10,7 +10,7 @@ ma = Marshmallow(app)
 
 class TodoSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'user_id', 'status_id', 'title', 'date', 'priority')
+        fields = ('id', 'user_id', 'title', 'date', 'priority', 'completed')
 
 
 todo_schema = TodoSchema()
@@ -43,10 +43,10 @@ def update_todo(todo_id):
         request.get_json(force=True)
 
         todo = Todo.query.filter_by(id=todo_id).scalar()
-        todo.status_id = request.json['status']
         todo.title = request.json['title']
         todo.date = request.json['date']
         todo.priority = request.json['priority']
+        todo.completed = request.json['completed']
 
         db.session.commit()
 
