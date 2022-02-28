@@ -26,7 +26,8 @@ class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(
         'users.id', ondelete='CASCADE'))
-    title = db.Column(db.String(255), nullable=False)
-    date = db.Column(db.Date(), nullable=False)
     status_id = db.Column(db.Integer, db.ForeignKey(
         'status.id'), default=1)
+    title = db.Column(db.String(255), nullable=False)
+    date = db.Column(db.Date(), nullable=False)
+    priority = db.Column(db.Integer, default=1, nullable=False)
