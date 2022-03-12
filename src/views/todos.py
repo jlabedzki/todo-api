@@ -1,6 +1,6 @@
 from flask import Flask, Blueprint, Response, request
 from flask_marshmallow import Marshmallow
-from db.models import *
+from src.db.models import *
 
 app = Flask(__name__)
 todos = Blueprint('todos', __name__)

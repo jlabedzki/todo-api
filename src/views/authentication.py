@@ -1,7 +1,7 @@
 from flask import Flask, Blueprint, Response, jsonify, request
 from flask_login import login_user, logout_user
 from flask_bcrypt import Bcrypt
-from db.models import *
+from src.db.models import *
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -21,9 +21,6 @@ def register():
     if user_exists:
         return Response(status=409)
     else:
-        # hash password before storing in db
-        # hashed_password = bcrypt.generate_password_hash(
-        #     password).decode('utf-8')
         user = User(username=username, password=password)
         db.session.add(user)
         db.session.commit()

@@ -24,7 +24,10 @@ class User(db.Model, UserMixin):
 
 
 class Todo(db.Model):
-    """ Todo model """
+    """
+    Todo model
+    The priority will default to 1 (low), and can be any of (1, 2, 3 (low, medium, high))
+    """
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey(
@@ -33,3 +36,10 @@ class Todo(db.Model):
     date = db.Column(db.Date(), nullable=False)
     priority = db.Column(db.Integer, default=1, nullable=False)
     completed = db.Column(db.Boolean, default=False, nullable=False)
+
+    def __init__(self, user_id: int, title: str, date: str, priority=1, completed=False):
+        self.user_id = user_id
+        self.title = title
+        self.date = date
+        self.priority = priority
+        self.completed = completed
