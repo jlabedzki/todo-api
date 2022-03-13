@@ -1,6 +1,7 @@
 from flask import Flask, Blueprint, Response, request
+from flask_login.utils import login_required
 from flask_marshmallow import Marshmallow
-from db.models import *
+from src.db.models import *
 
 app = Flask(__name__)
 todos = Blueprint('todos', __name__)
@@ -18,6 +19,7 @@ todos_schema = TodoSchema(many=True)
 
 
 @todos.route('/todos/<int:user_id>', methods=['GET', 'POST'])
+@login_required
 def todos_for_user(user_id):
     if request.method == 'GET':
         todos = Todo.query.filter_by(user_id=user_id)
@@ -38,11 +40,16 @@ def todos_for_user(user_id):
 
 
 @todos.route('/todo/<int:todo_id>', methods=['PUT', 'DELETE'])
+@login_required
 def update_todo(todo_id):
     if request.method == 'PUT':
         request.get_json(force=True)
 
         todo = Todo.query.filter_by(id=todo_id).scalar()
+
+        if not todo:
+            return Response(status=404)
+
         todo.title = request.json['title']
         todo.date = request.json['date']
         todo.priority = request.json['priority']
@@ -54,6 +61,9 @@ def update_todo(todo_id):
 
     if request.method == 'DELETE':
         todo = Todo.query.filter_by(id=todo_id).scalar()
+
+        if not todo:
+            return Response(status=404)
 
         db.session.delete(todo)
         db.session.commit()

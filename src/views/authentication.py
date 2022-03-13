@@ -1,7 +1,8 @@
 from flask import Flask, Blueprint, Response, jsonify, request
 from flask_login import login_user, logout_user
 from flask_bcrypt import Bcrypt
-from db.models import *
+from flask_login.utils import login_required
+from src.db.models import *
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
@@ -21,10 +22,7 @@ def register():
     if user_exists:
         return Response(status=409)
     else:
-        # hash password before storing in db
-        hashed_password = bcrypt.generate_password_hash(
-            password).decode('utf-8')
-        user = User(username=username, password=hashed_password)
+        user = User(username=username, password=password)
         db.session.add(user)
         db.session.commit()
         return Response(status=201)
@@ -42,7 +40,7 @@ def login():
         # Compare the password input to the hashed password in the db
         if bcrypt.check_password_hash(user.password, password):
             login_user(user)
-            return jsonify({'user_id': user.id})
+            return jsonify({'user_id': user.id}), 200
         else:
             return Response(status=401)
     else:
@@ -50,7 +48,7 @@ def login():
 
 
 @authentication.route('/logout', methods=['GET'])
+@login_required
 def logout():
-
     logout_user()
     return Response(status=200)
