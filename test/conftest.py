@@ -16,7 +16,7 @@ def new_todo():
     return todo
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='session')
 def test_client():
     flask_app = create_app('flask_test.cfg')
 

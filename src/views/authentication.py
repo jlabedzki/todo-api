@@ -1,6 +1,7 @@
 from flask import Flask, Blueprint, Response, jsonify, request
 from flask_login import login_user, logout_user
 from flask_bcrypt import Bcrypt
+from flask_login.utils import login_required
 from src.db.models import *
 
 app = Flask(__name__)
@@ -39,7 +40,7 @@ def login():
         # Compare the password input to the hashed password in the db
         if bcrypt.check_password_hash(user.password, password):
             login_user(user)
-            return jsonify({'user_id': user.id})
+            return jsonify({'user_id': user.id}), 200
         else:
             return Response(status=401)
     else:
@@ -47,7 +48,7 @@ def login():
 
 
 @authentication.route('/logout', methods=['GET'])
+@login_required
 def logout():
-
     logout_user()
     return Response(status=200)
