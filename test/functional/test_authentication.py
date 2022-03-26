@@ -45,6 +45,7 @@ def test_login_route(test_client):
 
     assert good_response.status_code == 200
     assert good_response.get_json()['user_id'] == 1
+    assert good_response.get_json()['username'] == 'test'
     assert bad_response_forbidden.status_code == 401
     assert bad_response_not_found.status_code == 404
 
