@@ -40,7 +40,7 @@ def login():
         # Compare the password input to the hashed password in the db
         if bcrypt.check_password_hash(user.password, password):
             login_user(user)
-            return jsonify({'user_id': user.id}), 200
+            return jsonify({'user_id': user.id, 'username': user.username}), 200
         else:
             return Response(status=401)
     else:
