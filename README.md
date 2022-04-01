@@ -1,4 +1,6 @@
-## Running
+## Running Locally
 
 - `source env/bin/activate`
-- `python -m flask run`
+- `export FLASK_APP=app,py`
+- `export FLASK_ENV=development`
+- `flask run`

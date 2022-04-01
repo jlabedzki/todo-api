@@ -1,5 +1,5 @@
 from flask import Flask, Blueprint, Response, request
-from flask_login.utils import login_required
+from flask_jwt_extended import jwt_required
 from flask_marshmallow import Marshmallow
 from src.db.models import *
 
@@ -19,7 +19,7 @@ todos_schema = TodoSchema(many=True)
 
 
 @todos.route('/todos/<int:user_id>', methods=['GET', 'POST'])
-@login_required
+@jwt_required()
 def todos_for_user(user_id):
     if request.method == 'GET':
         todos = Todo.query.filter_by(user_id=user_id)
@@ -40,7 +40,7 @@ def todos_for_user(user_id):
 
 
 @todos.route('/todo/<int:todo_id>', methods=['PUT', 'DELETE'])
-@login_required
+@jwt_required()
 def update_todo(todo_id):
     if request.method == 'PUT':
         request.get_json(force=True)
