@@ -1,4 +1,4 @@
-import flask
+from flask_jwt_extended.utils import create_access_token
 import pytest
 from src.db.models import *
 from src import create_app
@@ -21,7 +21,6 @@ def test_client():
     flask_app = create_app('flask_test.cfg')
 
     testing_client = flask_app.test_client()
-
     with flask_app.app_context():
         db.create_all()
 
